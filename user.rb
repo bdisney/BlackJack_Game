@@ -1,7 +1,7 @@
 require_relative 'player.rb'
 
-class Dealer < Player
-  def initialize(name = 'Dealer')
+class User < Player
+  def initialize(name)
     super
     @name = name
   end
