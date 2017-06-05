@@ -1,4 +1,6 @@
 class Player
+  BORDER = "-" * 15
+
   attr_reader :name, :account, :cards
 
   def initialize(name)
@@ -11,8 +13,14 @@ class Player
     cards[card[0]] = card[1]
   end
 
+  def results
+    results = cards.values.reduce(:+)
+    results <= 21 ? results : results = 0
+  end
+
   def display_cards
     cards.each_key { |card| print "#{card} " }
-    puts "\nУ вас: #{cards.values.reduce(:+)}"
+    puts "\nРука #{name}: #{cards.values.reduce(:+)}"
+    puts BORDER
   end
 end
