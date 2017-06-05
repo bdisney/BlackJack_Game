@@ -6,16 +6,13 @@ require_relative 'player.rb'
 require_relative 'dealer.rb'
 require_relative 'user.rb'
 
-
 puts 'Добро пожаловать в ЛуноПарк'
 
 controller = GameController.new
-controller.start_game
 
-
-# loop do
-#   # controller.display_actions
-#   # user_choice = gets.strip
-#   # break if user_choice == '0'
-#   # controller.render_action(user_choice)
-# end
+loop do
+  controller.new_game
+   # user_choice = gets.strip
+   # break if user_choice == '0'
+   # controller.render_action(user_choice)
+end
