@@ -8,6 +8,14 @@ class GameController
     @user   = create_user
   end
 
+  def new_game
+    clear_screen
+    start_game
+    game
+  end
+
+  private
+
   def user_actions
     @available_actions ||= USER_ACTIONS.dup
 
@@ -35,39 +43,31 @@ class GameController
     end
   end
 
-  def new_game
-    clear_screen
-    first_move
-    next_move
-  end
-
-  def first_move
+  def start_game
     bet
     2.times do
       [@user, @dealer].each { |player| player.take_card(@deck.give_out_card) }
     end
-    show_players_cards
-    user_actions
-    execute_action(@user_choice)
   end
 
-  def next_move
-    clear_screen
-    score_bar
-    if @user.cards.count < 3
+  def game
+    until @user.cards.count > 2
+      clear_screen
+      score_bar
       show_players_cards
       user_actions
       execute_action(@user_choice)
-    else
-      open_cards
     end
+    clear_screen
+    score_bar
+    open_cards
   end
 
   def open_cards
     @dealer.display_cards
     @user.display_cards
     choose_winner
-    reset_options
+    reset_game
   end
 
   def choose_winner
@@ -92,15 +92,7 @@ class GameController
     [@user, @dealer].each { |player| @bank.money_transfer(player.account, cash_back) }
   end
 
-  # def game_over
-  #   print 'Enter - Продолжить. Exit - выход : '
-  #   user_choice = gets.strip.downcase
-
-  #   exit if user_choice == 'exit'
-  #   reset_options
-  # end
-
-  def reset_options
+  def reset_game
     @deck = create_deck
     @available_actions, @winner = nil
 
@@ -108,14 +100,13 @@ class GameController
     new_game
   end
 
-  protected
-
   def bet(value = 10)
     [@user.account, @dealer.account].each { |player| player.money_transfer(@bank, value) }
     score_bar
   end
 
   def dealer_move
+    return false if @dealer.cards.count > 2
     @dealer.take_card(@deck.give_out_card) if @dealer.pre_results < 18
   end
 
