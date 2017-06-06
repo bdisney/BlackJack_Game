@@ -10,6 +10,6 @@ class Dealer < Player
     secret = "\u{2B1C}"
     cards.each_key { print "#{secret}   " }
     puts "\nРука #{name}."
-    puts BORDER
+    puts DIVIDER
   end
 end

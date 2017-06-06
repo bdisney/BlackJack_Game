@@ -8,15 +8,15 @@ class CardDeck
   attr_accessor :deck
 
   def initialize
-    @deck = []
-    create
+    @deck = create
   end
 
   def create
+    @deck = []
     LEARS.each do |lear|
-      CARD_VALUES.each { |card, value| deck << [card + lear, value] }
+      CARD_VALUES.each { |card, value| @deck << [card + lear, value] }
     end
-    deck.shuffle!
+    @deck.shuffle!
   end
 
   def give_out_card
