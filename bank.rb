@@ -1,4 +1,5 @@
 class Bank
+  AVATAR = "🎩".freeze
   attr_accessor :sum
 
   def initialize(holder, sum)
