@@ -4,6 +4,7 @@ class Bank
 
   def initialize(holder, sum)
     @sum = sum
+    @holder = holder
   end
 
   def money_transfer(receiver, value)
