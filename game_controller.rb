@@ -1,8 +1,6 @@
 class GameController
   USER_ACTIONS = ['1-Пропустить ход', '2-Взять карту', '3-Открыть карты.'].freeze
 
-  #attr_reader :deck
-
   def initialize
     @bank   = Bank.new(:game, 0)
     @deck   = create_deck
@@ -13,8 +11,8 @@ class GameController
   def new_game
     clear_screen
     first_move # по 2 карты у обоих игроков
-    second_move
-    third_move
+    #second_move
+    next_move
   end
 
   def first_move
@@ -23,14 +21,11 @@ class GameController
       [@user, @dealer].each { |player| player.take_card(@deck.give_out_card) }
     end
     show_players_cards
-  end
-
-  def second_move
     user_actions
     execute_action(@user_choice)
   end
 
-  def third_move
+  def next_move
     clear_screen
     info
     if @user.cards.count < 3
@@ -43,8 +38,8 @@ class GameController
   end
 
   def open_cards
-    clear_screen
-    info
+    # clear_screen
+    # info
     @dealer.display_cards
     @user.display_cards
     choose_winner
@@ -72,8 +67,9 @@ class GameController
       @user.take_card(@deck.give_out_card)
       dealer_move
     when 3
+      clear_screen
       open_cards
-      new_game
+      #new_game
     else
       puts "Неизвестная команда!"
     end
@@ -92,6 +88,7 @@ class GameController
       end
     @winner ? (puts "Выиграл - #{@winner.name}!") : (puts 'Ничья!')
     @bank.money_transfer(@winner.account, @bank.sum) if @winner
+    gets
   end
 
   def game_over
@@ -107,6 +104,7 @@ class GameController
     @available_actions, @winner = nil
 
     [@user.cards, @dealer.cards].each(&:clear)
+    new_game
   end
 
   def info
