@@ -20,7 +20,7 @@ class CardDeck
   end
 
   def give_out_card
-    puts 'Выдаем карту'
+    print '📱  '
     @deck.pop
   end
 end
