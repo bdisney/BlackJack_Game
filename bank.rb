@@ -6,6 +6,8 @@ class Bank
   end
 
   def money_transfer(receiver, value)
+    raise 'Недостаточно средств. Игра окончена.' if sum.zero?
+
     self.sum -= value
     receiver.sum += value
   end
