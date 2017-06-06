@@ -1,5 +1,5 @@
 class Player
-  BORDER = "-" * 15
+  DIVIDER = "-" * 15
 
   attr_reader :name, :account, :cards
 
@@ -14,13 +14,26 @@ class Player
   end
 
   def results
-    results = cards.values.reduce(:+)
+    results = pre_results
     results <= 21 ? results : results = 0
   end
 
   def display_cards
     cards.each_key { |card| print "#{card} " }
-    puts "\nРука #{name}: #{cards.values.reduce(:+)}"
-    puts BORDER
+    puts "\nРука #{name}: #{pre_results}"
+    puts DIVIDER
+  end
+
+  def pre_results
+    results = cards.values.reduce(:+)
+    @pre_results = results
+
+    cards.each do |card|
+      if card[1] == 1
+        @pre_results = results + 10
+        @pre_results < 22 ? @pre_results : @pre_results = results
+      end
+    end
+    @pre_results
   end
 end
