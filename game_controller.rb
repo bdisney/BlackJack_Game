@@ -1,7 +1,7 @@
 class GameController
   USER_ACTIONS = ['1-Пропустить ход', '2-Взять карту', '3-Открыть карты.'].freeze
 
-  attr_reader :deck
+  #attr_reader :deck
 
   def initialize
     @bank   = Bank.new(:game, 0)
@@ -15,7 +15,6 @@ class GameController
     first_move # по 2 карты у обоих игроков
     second_move
     third_move
-    reset_options
   end
 
   def first_move
@@ -23,8 +22,7 @@ class GameController
     2.times do
       [@user, @dealer].each { |player| player.take_card(@deck.give_out_card) }
     end
-    @dealer.display_card_shirt
-    @user.display_cards
+    show_players_cards
   end
 
   def second_move
@@ -36,9 +34,7 @@ class GameController
     clear_screen
     info
     if @user.cards.count < 3
-      @dealer.display_card_shirt
-      @user.display_cards
-
+      show_players_cards
       user_actions
       execute_action(@user_choice)
     else
@@ -52,7 +48,7 @@ class GameController
     @dealer.display_cards
     @user.display_cards
     choose_winner
-    game_over
+    reset_options
   end
 
   def bet(value = 10)
@@ -71,10 +67,10 @@ class GameController
   def execute_action(action)
     case action
     when 1
-      @dealer.take_card(@deck.give_out_card) if @dealer.cards.values.reduce(:+) < 18
+      dealer_move
     when 2
       @user.take_card(@deck.give_out_card)
-      @dealer.take_card(@deck.give_out_card) if @dealer.cards.values.reduce(:+) < 18
+      dealer_move
     when 3
       open_cards
       new_game
@@ -83,30 +79,34 @@ class GameController
     end
   end
 
+  def dealer_move
+    @dealer.take_card(@deck.give_out_card) if @dealer.pre_results < 18
+  end
+
   def choose_winner
-    if @user.results > @dealer.results
-      @winner = @user
-    elsif @user.results < @dealer.results
-      @winner = @dealer
-    else
-      puts 'Ничья'
-    end
-    puts "Выиграл - #{@winner.name}." if @winner
+    @winner =
+      if @user.results > @dealer.results
+        @user
+      elsif @user.results < @dealer.results
+        @dealer
+      end
+    @winner ? (puts "Выиграл - #{@winner.name}!") : (puts 'Ничья!')
     @bank.money_transfer(@winner.account, @bank.sum) if @winner
   end
 
   def game_over
     print 'Enter - Продолжить. Exit - выход : '
     user_choice = gets.strip.downcase
+
     exit if user_choice == 'exit'
     reset_options
   end
 
   def reset_options
-    @available_actions = nil
-    [@user.cards, @dealer.cards].each(&:clear)
     @deck = create_deck
-    @winner = nil
+    @available_actions, @winner = nil
+
+    [@user.cards, @dealer.cards].each(&:clear)
   end
 
   def info
@@ -114,6 +114,11 @@ class GameController
   end
 
   protected
+
+  def show_players_cards
+    @dealer.display_card_shirt
+    @user.display_cards
+  end
 
   def create_dealer
     @dealer = Dealer.new
