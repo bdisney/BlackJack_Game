@@ -32,9 +32,7 @@ class GameController
       @user.take_card(@deck.give_out_card)
       dealer_move
     when 3
-      clear_screen
-      score_bar
-      open_cards
+      turn_over
     when 0
       puts 'Всего хорошего!'
       exit
@@ -58,9 +56,7 @@ class GameController
       user_actions
       execute_action(@user_choice)
     end
-    clear_screen
-    score_bar
-    open_cards
+    turn_over
   end
 
   def open_cards
@@ -68,6 +64,12 @@ class GameController
     @user.display_cards
     choose_winner
     reset_game
+  end
+
+  def turn_over
+    clear_screen
+    score_bar
+    open_cards
   end
 
   def choose_winner
