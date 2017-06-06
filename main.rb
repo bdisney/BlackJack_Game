@@ -12,7 +12,4 @@ controller = GameController.new
 
 loop do
   controller.new_game
-   # user_choice = gets.strip
-   # break if user_choice == '0'
-   # controller.render_action(user_choice)
 end
