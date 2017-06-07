@@ -1,7 +1,7 @@
 require_relative 'player.rb'
 
 class Dealer < Player
-  AVATAR = "\u{1f4a9}".freeze
+  AVATAR = "💩".freeze
 
   def initialize(name = 'Dealer')
     super
